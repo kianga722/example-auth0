@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const path = require('path');
+
+const port = process.env.PORT || 8081;
 
 // define the Express app
 const app = express();
@@ -24,7 +27,8 @@ app.use(cors());
 app.use(morgan('combined'));
 
 // retrieve all questions
-app.get('/', (req, res) => {
+// /
+app.get('/api/', (req, res) => {
   const qs = questions.map(q => ({
     id: q.id,
     title: q.title,
@@ -35,7 +39,8 @@ app.get('/', (req, res) => {
 });
 
 // get a specific question
-app.get('/:id', (req, res) => {
+// /:id
+app.get('/api/:id', (req, res) => {
   const question = questions.filter(q => (q.id === parseInt(req.params.id)));
   if (question.length > 1) return res.status(500).send();
   if (question.length === 0) return res.status(404).send();
@@ -43,7 +48,8 @@ app.get('/:id', (req, res) => {
 });
 
 // insert a new question
-app.post('/', (req, res) => {
+// /
+app.post('/api/', (req, res) => {
   const { title, description } = req.body;
   const newQuestion = {
     id: questions.length + 1,
@@ -56,7 +62,8 @@ app.post('/', (req, res) => {
 });
 
 // insert a new answer to a question
-app.post('/answer/:id', (req, res) => {
+// /answer/:id
+app.post('/api/answer/:id', (req, res) => {
   const { answer } = req.body;
 
   const question = questions.filter(q => (q.id === parseInt(req.params.id)));
@@ -70,7 +77,17 @@ app.post('/answer/:id', (req, res) => {
   res.status(200).send();
 });
 
+if (process.env.NODE_ENV === 'production') {
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, 'client/build')));
+
+  // Handle React routing, return all requests to React app
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  });
+}
+
 // start the server
-app.listen(8081, () => {
-  console.log('listening on port 8081');
+app.listen(port, () => {
+  console.log(`listening on port ${port}`);
 });
