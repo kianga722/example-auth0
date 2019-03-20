@@ -1,22 +1,21 @@
 {
-  "name": "qa-app",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "Trying out a tutorial from auth0",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm install --prefix backend && node backend/src",
+    "start": "node index.js",
     "heroku-postbuild": "cd frontend && npm install && npm run build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kianga722/example-auth0.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/kianga722/example-auth0/issues"
-  },
-  "homepage": "https://github.com/kianga722/example-auth0#readme"
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "helmet": "^3.16.0",
+    "morgan": "^1.9.1"
+  }
 }
